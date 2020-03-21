@@ -2,7 +2,7 @@ on:
   push:
       tags:
         - '*'
-name: Test, Debug Build and Release apk
+name: Test, Release Build and Release apk
 jobs:
   build:
     name: Build APK
@@ -17,7 +17,13 @@ jobs:
         flutter-version: '1.7.8+hotfix.4'
     - run: flutter pub get
     - run: flutter test
-    - run: flutter build apk --debug
+    - name: Build
+      run: echo $KEY_JKS > key.jks && flutter build apk --flavor prodGitHub --release
+      env:
+        KEY_JKS: ${{ secrets.KEY_JKS }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
+        ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     - name: Push APK to Releases
       uses: ncipollo/release-action@v1
       with:
