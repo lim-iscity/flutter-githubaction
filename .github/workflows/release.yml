@@ -18,7 +18,7 @@ jobs:
     - run: flutter pub get
     - run: flutter test
     - name: Build
-      run: echo $KEY_JKS > key.jks && flutter build apk --flavor prodGitHub --release --target-platform android-arm,android-arm64 --split-per-abi
+      run: echo $KEY_JKS > key.jks && flutter build apk --flavor prodgithub --release
       env:
         KEY_JKS: ${{ secrets.KEY_JKS }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
