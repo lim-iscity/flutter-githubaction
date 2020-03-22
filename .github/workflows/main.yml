@@ -1,7 +1,7 @@
 on:
   push:
       tags:
-        - '*'
+        - 'd*'
 name: Test, Debug Build and Release apk
 jobs:
   build:
