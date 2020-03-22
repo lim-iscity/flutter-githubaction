@@ -17,15 +17,26 @@ jobs:
         flutter-version: '1.7.8+hotfix.4'
     - run: flutter pub get
     - run: flutter test
+    - run: flutter build apk --flavor prodgithub  --release
+    - run: echo $KEY_JKS > key.jks
     - name: Build
-      run: echo $KEY_JKS > key.jks && flutter build apk --flavor prodgithub --release
+      run: flutter build apk --flavor prodgithub --release
       env:
         KEY_JKS: ${{ secrets.KEY_JKS }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
         ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: build/app/outputs/apk/prodgithub/release
+        signingKeyBase64: ${{ secrets.KEY_JKS }}
+        alias: ${{ secrets.KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_PASSWORD }}
+        keyPassword: ${{ secrets.ALIAS_PASSWORD }}
     - name: Push APK to Releases
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "build/app/outputs/apk/debug/*.apk"
+        artifacts: "build/app/outputs/apk/prodgithub/release/*.apk"
         token: ${{ secrets.TOKEN }}
+
